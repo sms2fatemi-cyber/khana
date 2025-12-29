@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>خانه | آگهی‌های افغانستان</title>
+    <title>خانه | املاک و استخدام افغانستان</title>
     <!-- فونت وزیرمتن -->
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     
@@ -15,6 +15,7 @@
             --primary-color: #a62626;
             --primary-hover: #861c1c;
             --accent-green: #00a693;
+            --accent-blue: #3b82f6;
             --text-main: #002f34;
             --text-secondary: #5d7579;
             --bg-body: #f5f5f5;
@@ -24,6 +25,7 @@
             --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
             --radius-md: 12px;
             --radius-sm: 8px;
+            --header-height: 70px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -31,10 +33,9 @@
         body { 
             background-color: var(--bg-body); 
             color: var(--text-main); 
-            padding-top: 70px; /* هدر کوچکتر */
-            padding-bottom: 90px; 
+            padding-top: var(--header-height); 
             min-height: 100vh;
-            scroll-behavior: smooth;
+            display: flex; flex-direction: column;
         }
 
         /* --- Header --- */
@@ -44,215 +45,177 @@
             position: fixed; 
             top: 0; left: 0; right: 0; 
             z-index: 1000; 
-            padding: 10px 0;
+            height: var(--header-height);
+            padding: 0 20px;
+            display: flex; align-items: center; justify-content: space-between;
             border-bottom: 1px solid #f0f0f0;
         }
-        .header-container {
-            max-width: 1200px; margin: 0 auto; padding: 0 20px; 
-            display: flex; align-items: center; justify-content: space-between; gap: 16px;
-        }
-        .logo-area { font-weight: 900; font-size: 1.4rem; color: var(--primary-color); cursor: pointer; white-space: nowrap; }
-        
-        .search-wrapper { flex-grow: 1; max-width: 500px; position: relative; }
+        .header-center { display: flex; align-items: center; gap: 20px; width: 100%; max-width: 600px; }
+        .logo-area { font-weight: 900; font-size: 1.5rem; color: var(--primary-color); cursor: pointer; white-space: nowrap; }
+        .search-wrapper { flex-grow: 1; position: relative; }
         .search-input {
-            width: 100%; padding: 10px 45px 10px 15px; border: 1px solid var(--border-color);
-            border-radius: var(--radius-md); background-color: #f9f9f9; font-size: 0.95rem; outline: none; transition: border 0.2s;
+            width: 100%; padding: 10px 40px 10px 15px; border: 1px solid var(--border-color);
+            border-radius: 30px; background-color: #f9f9f9; font-size: 0.95rem; outline: none; transition: all 0.3s;
         }
         .search-input:focus { background-color: var(--bg-white); border-color: var(--primary-color); }
-        .search-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); width: 20px; height: 20px; }
+        .search-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); width: 18px; height: 18px; }
 
+        .header-right { display: flex; gap: 10px; align-items: center; }
+        .btn-profile { 
+            background: white; border: 1px solid var(--border-color); color: var(--text-main);
+            padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+        }
+        .btn-profile:hover { background: #f0f0f0; }
+        .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-weight: bold; color: white; }
+
+        /* --- Desktop Split Layout (The New Look) --- */
+        /* در دسکتاپ: نوار زیر هدر، نقشه چپ، لیست راست */
+        .desktop-layout {
+            display: none; /* پیش فرض مخفی */
+            width: 100%; max-width: 1400px;
+            height: calc(100vh - var(--header-height)); /* پر ارتفاع صفحه */
+            margin: 20px auto;
+            gap: 20px;
+        }
+        
+        @media (min-width: 992px) {
+            .desktop-layout { display: flex; }
+            .container { display: none; /* مخفی کردن کانتینر موبایل در دسکتاپ */ }
+        }
+
+        .desktop-sidebar {
+            width: 450px; /* عرض ثابت برای نقشه */
+            flex-shrink: 0;
+            height: 100%;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+
+        .desktop-main {
+            flex: 1; /* باقی فضا برای لیست */
+            overflow-y: auto; /* اسکرول مستقل */
+            padding-bottom: 100px; /* جا برای دکمه FAB موبایل اگر بود */
+        }
+
+        /* --- Mobile Layout (Original Behavior) --- */
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
+        
         /* --- Categories --- */
         .category-tabs-wrapper { background: white; border-bottom: 1px solid #eee; }
         .category-tabs {
-            max-width: 1200px; margin: 0 auto; padding: 12px 20px 5px 20px; display: flex; gap: 10px; overflow-x: auto;
+            max-width: 1200px; margin: 0 auto; padding: 10px 20px; display: flex; gap: 10px; overflow-x: auto;
         }
         .cat-tab {
             padding: 10px 24px; border: 1px solid var(--border-color); border-radius: 50px; background: white;
             cursor: pointer; white-space: nowrap; font-weight: 700; color: var(--text-secondary); transition: all 0.2s;
         }
-        .cat-tab.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); box-shadow: 0 2px 5px rgba(166,38,38,0.2); }
-        .cat-tab:hover:not(.active) { background-color: #f5f5f5; }
+        .cat-tab.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); }
 
         .sub-category-tabs {
-            max-width: 1200px; margin: 0 auto; padding: 0 20px 8px 20px; display: none; gap: 10px; overflow-x: auto;
+            max-width: 1200px; margin: 0 auto; padding: 5px 20px 10px 20px; display: none; gap: 10px; overflow-x: auto;
         }
         .sub-cat-tab {
             padding: 6px 16px; border-bottom: 3px solid transparent; background: none;
-            cursor: pointer; font-weight: 600; color: var(--text-secondary); font-size: 0.95rem;
+            cursor: pointer; font-weight: 600; color: var(--text-secondary); font-size: 0.9rem;
         }
         .sub-cat-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
 
-        /* --- Main Content Layout --- */
-        .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
-        .view-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px; }
-        .result-count { font-size: 0.9rem; color: var(--text-secondary); }
+        /* --- Cards (Compact for Desktop Sidebar) --- */
+        .listings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+        .card { background: white; border: 1px solid var(--border-color); border-radius: var(--radius-sm); overflow: hidden; cursor: pointer; transition: all 0.2s; position: relative; width: 100%; }
+        .card:hover { box-shadow: var(--shadow-sm); transform: translateY(-2px); }
         
-        .view-toggle-group { display: flex; background: white; border-radius: var(--radius-sm); border: 1px solid var(--border-color); overflow: hidden; flex-shrink: 0; }
-        .view-btn {
-            padding: 8px 16px; background: white; border: none; border-left: 1px solid var(--border-color);
-            cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); transition: all 0.2s;
-        }
-        .view-btn:first-child { border-left: none; }
-        .view-btn.active { background-color: var(--text-main); color: white; }
-
-        /* --- Desktop Split View Style --- */
-        /* در دسکتاپ: نقشه چپ، لیست راست */
-        @media (min-width: 992px) {
-            .desktop-split-view {
-                display: flex; gap: 20px; height: 700px; /* ارتفاع مشخص برای اسکرول */
-                align-items: flex-start;
-            }
-            
-            /* سمت چپ: نقشه */
-            #map-container.split-view {
-                display: block; width: 40%; height: 100%; border-radius: var(--radius-md); 
-                box-shadow: var(--shadow-sm); flex-shrink: 0;
-            }
-            
-            /* سمت راست: لیست آگهی */
-            #list-view.split-view {
-                display: flex; flex-direction: column; width: 60%; height: 100%;
-                overflow-y: auto; /* اسکرول مستقل */
-                flex-shrink: 0;
-            }
-
-            /* مخفی کردن کنترل‌های عادی هنگام حالت اسپلیت */
-            .view-controls.hide-in-split { display: none; }
-        }
-
-        /* --- Mobile (Normal behavior) --- */
-        .listings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; padding-bottom: 20px; }
-        .card { background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; cursor: pointer; transition: all 0.2s; position: relative; width: 100%; }
-        .card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); transform: translateY(-3px); }
-        .card-tag { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.75); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; backdrop-filter: blur(4px); z-index: 2; }
-        .card-img { width: 100%; height: 180px; object-fit: cover; background: #eee; }
-        .card-body { padding: 16px; }
-        .card-title { font-weight: 800; margin-bottom: 8px; line-height: 1.4; font-size: 1rem; color: var(--text-main); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .card-meta { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
-        .card-price { font-weight: 800; color: var(--text-main); font-size: 1.1rem; }
-
-        /* --- Floating Action Button (Small + Icon) --- */
+        .card-img { width: 100%; height: 160px; object-fit: cover; background: #eee; }
+        .card-body { padding: 12px; }
+        .card-title { font-weight: 800; margin-bottom: 4px; line-height: 1.3; font-size: 0.95rem; color: var(--text-main); }
+        .card-meta { font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+        .card-price { font-weight: 800; color: var(--text-main); font-size: 1rem; }
+        .card-tag { position: absolute; top: 8px; left: 8px; background: rgba(166,38,38,0.9); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; }
+        .card-delete { position: absolute; top: 8px; right: 8px; background: #dc2626; color: white; border: none; width: 24px; height: 24px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        
+        #map-container { width: 100%; height: 100%; background: #eee; }
+        
+        /* --- FAB (Floating Action Button) --- */
         .fab-container {
             position: fixed; bottom: 30px; left: 30px; z-index: 2000;
         }
         .fab-btn {
             background-color: var(--primary-color); color: white; border: none;
-            padding: 14px 16px; /* کوچک کردن دکمه */
-            border-radius: 50px;
-            font-weight: 800; font-size: 0; /* مخفی کردن متن */
-            box-shadow: 0 4px 15px rgba(166, 38, 38, 0.4);
+            width: 60px; height: 60px; border-radius: 50%;
+            box-shadow: 0 4px 15px rgba(166, 38, 38, 0.3);
             cursor: pointer;
             display: flex; align-items: center; justify-content: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-            width: 50px; height: 50px;
+            transition: transform 0.2s;
         }
-        .fab-btn svg { width: 24px; height: 24px; } /* سایز آیکون */
-        .fab-btn:hover {
-            transform: scale(1.1) rotate(0deg);
-            background-color: var(--primary-hover);
-        }
+        .fab-btn svg { width: 32px; height: 32px; }
+        .fab-btn:hover { transform: scale(1.1); }
 
         /* --- Modals --- */
         .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65);
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6);
             z-index: 3000; display: none; justify-content: center; align-items: center;
         }
         .modal-box {
-            background: white; width: 90%; max-width: 850px; max-height: 90vh; 
-            border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            display: flex; flex-direction: column; 
-            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            background: white; width: 90%; max-width: 600px; border-radius: 16px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            display: flex; flex-direction: column; animation: slideUp 0.3s ease-out;
         }
-        .modal-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background: white; border-top-left-radius: 16px; border-top-right-radius: 16px; }
-        .modal-header h3 { font-size: 1.3rem; color: var(--text-main); }
-        .modal-body { padding: 24px; overflow-y: auto; flex-grow: 1; }
-        .close-btn { background: #f0f0f0; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #555; transition: background 0.2s; }
-        .close-btn:hover { background: #e0e0e0; color: #000; }
+        .modal-header { padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+        .modal-header h3 { font-size: 1.1rem; color: var(--text-main); }
+        .modal-body { padding: 20px; overflow-y: auto; max-height: 70vh; }
+        .close-btn { background: #eee; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #555; }
 
-        /* Modal Detail Styles */
-        .detail-img { width: 100%; height: 300px; object-fit: cover; border-radius: 12px; margin-bottom: 20px; }
-        .detail-price { font-size: 1.8rem; color: var(--primary-color); font-weight: 900; margin-bottom: 8px; letter-spacing: -0.5px; }
-        .detail-meta { font-size: 0.95rem; color: #666; margin-bottom: 20px; display: flex; gap: 20px; background: #f9f9f9; padding: 12px; border-radius: 10px; }
-        .detail-actions { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
-        .btn-action {
-            flex: 1; padding: 14px; border: none; border-radius: 8px; font-weight: 800; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1rem;
-            min-width: 150px; transition: transform 0.1s;
-        }
-        .btn-action:active { transform: scale(0.98); }
-        .btn-contact { background-color: var(--accent-green); color: white; }
-        .btn-map-loc { background-color: #3b82f6; color: white; }
-
-        /* --- Form Styles --- */
-        .form-group { margin-bottom: 20px; }
-        .form-label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: var(--text-main); }
-        .form-input, .form-textarea, .form-select { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; font-size: 0.95rem; transition: border 0.2s; background: white; }
-        .form-input:focus, .form-select:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 3px rgba(166,38,38,0.05); }
+        /* Form Styles */
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; margin-bottom: 6px; font-weight: 700; font-size: 0.9rem; color: var(--text-main); }
+        .form-input, .form-textarea, .form-select { width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; font-size: 0.95rem; outline: none; }
+        .form-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 2px rgba(166,38,38,0.1); }
         
-        .btn-block { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
-        .btn-loc-picker { background: #3b82f6; color: white; margin-bottom: 16px; }
-        .btn-loc-picker:hover { background: #2563eb; }
-        .btn-submit { background: var(--accent-green); color: white; margin-bottom: 0; }
-        .btn-submit:hover { background: #008c7c; }
-
-        /* Image Upload Styles */
-        .image-previews { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
-        .preview-thumb {
-            width: 80px; height: 80px; border-radius: 8px; border: 1px solid #ddd; object-fit: cover;
-            position: relative; cursor: pointer;
+        .btn-block { width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: background 0.2s; }
+        
+        /* Location Picker Expanded Bar */
+        .btn-loc-picker.expanded {
+            flex-direction: column; align-items: flex-start; padding: 12px; text-align: right;
+            background: #e0f2fe; color: #0369a1; border-color: #0369a1;
         }
-        .preview-thumb span { 
-            position: absolute; top: -5px; right: -5px; background: #dc2626; color: white;
-            width: 20px; height: 20px; border-radius: 50%; text-align: center;
-            line-height: 18px; font-size: 12px; cursor: pointer;
-        }
-
-        /* Picker Modal Specifics */
-        #location-picker-modal .modal-box { max-width: 600px; height: 85vh; }
-        #picker-map-container { width: 100%; height: 400px; border-radius: 12px; margin-bottom: 20px; border: 2px solid #eee; flex-shrink: 0; }
-        .picker-actions { display: flex; gap: 10px; justify-content: flex-end; flex-shrink: 0; }
-        .btn-cancel { background: #9ca3af; color: white; border: none; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-        .btn-confirm { background: var(--primary-color); color: white; border: none; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; }
-
-        /* Leaflet Popup Customization */
-        .leaflet-popup-content-wrapper { border-radius: 12px; direction: rtl; overflow: hidden; padding: 0; box-shadow: 0 5px 20px rgba(0,0,0,0.15); }
-        .leaflet-popup-content { margin: 0; width: 240px !important; line-height: 1.4; }
-        .popup-small-img { width: 100%; height: 120px; object-fit: cover; display: block; cursor: pointer; }
-        .popup-small-body { padding: 12px; background: white; }
-        .popup-title { font-weight: bold; font-size: 13px; color: #333; margin-bottom: 4px; }
-        .popup-price { font-size: 12px; color: var(--primary-color); font-weight: 800; margin-bottom: 4px; }
-        .popup-view-btn { font-size: 11px; color: #3b82f6; text-decoration: underline; cursor: pointer; border:none; background:none; }
-
-        /* Utility Classes */
-        .hidden { display: none !important; }
+        .loc-info { font-size: 0.85rem; font-family: monospace; margin-top: 4px; }
+        
+        /* --- Toast Notification --- */
+        .toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 4000; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .toast { background: #333; color: white; padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; animation: toastIn 0.3s; text-align: center; }
+        .toast.success { background: #065f46; }
+        .toast.error { background: #991b1b; }
 
         /* Mobile Adjustments */
         @media (max-width: 991px) {
-            .logo-area { font-size: 1.2rem; }
-            .search-wrapper { max-width: 100%; }
-            .search-input { padding: 8px 30px 8px 10px; }
-            body { padding-top: 130px; }
-            .detail-actions { flex-direction: column; }
-            .btn-action { width: 100%; }
-            
-            #picker-map-container { height: 300px; }
-            .fab-container { bottom: 20px; left: 20px; right: 20px; display: flex; justify-content: flex-end; }
-            
-            .view-controls.hide-in-split { display: flex; } /* کنترل‌ها در موبایل باید باشند */
+            .fab-btn span { display: none; } /* مخفی کردن متن دکمه */
+            .fab-btn { width: 50px; height: 50px; bottom: 20px; left: 20px; }
+            .fab-btn svg { width: 24px; height: 24px; }
         }
 
-        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes toastIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
     <!-- Header -->
     <header>
-        <div class="header-container">
-            <div class="logo-area" onclick="resetApp()">خانه</div>
+        <div class="logo-area" onclick="window.location.reload()">خانه</div>
+        <div class="header-center">
             <div class="search-wrapper">
-                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                <input type="text" class="search-input" placeholder="جستجو در خانه...">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" class="search-input" id="search-input" placeholder="جستجو..." oninput="handleSearch()">
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="btn-profile" id="btn-profile" onclick="handleProfileClick()">
+                <span id="profile-text">پروفایل</span>
+                <div id="user-avatar" class="user-avatar hidden">U</div>
             </div>
         </div>
     </header>
@@ -263,6 +226,7 @@
             <div class="cat-tab active" onclick="switchMainCategory('realestate', this)">املاک</div>
             <div class="cat-tab" onclick="switchMainCategory('employment', this)">استخدام (کارفرما)</div>
             <div class="cat-tab" onclick="switchMainCategory('jobhunting', this)">کارجویی (جویای کار)</div>
+            <div class="cat-tab" id="tab-myads" class="hidden" onclick="switchMainCategory('myads', this)" style="color:var(--primary-color)">آگهی‌های من</div>
         </div>
         <div id="sub-category-tabs" class="sub-category-tabs">
             <div class="sub-cat-tab active" onclick="switchSubCategory('sale', this)">فروشی</div>
@@ -271,43 +235,53 @@
         </div>
     </div>
 
-    <main class="container">
-        <!-- Container for Split View on Desktop -->
-        <div class="view-controls" id="desktop-controls">
-            <div class="result-count" id="result-count">در حال حاضر ۵ آگهی موجود است.</div>
-            <div class="view-toggle-group">
-                <button class="view-btn first-child active" id="btn-list" onclick="setDesktopMode('list')">لیست آگهی‌ها</button>
-                <button class="view-btn" id="btn-map" onclick="setDesktopMode('map')">روی نقشه</button>
-            </div>
+    <!-- Desktop Layout Container -->
+    <div class="desktop-layout">
+        <!-- Left: Map -->
+        <div class="desktop-sidebar">
+            <div id="map-container"></div>
         </div>
+        
+        <!-- Right: List -->
+        <div class="desktop-main">
+            <div id="list-view" class="listings-grid"></div>
+        </div>
+    </div>
 
-        <div class="desktop-split-view" id="main-content-area">
-            <!-- Left Side: Map -->
-            <div id="map-container" class="split-view"></div>
-            
-            <!-- Right Side: List -->
-            <div id="list-view" class="split-view listings-grid"></div>
-        </div>
+    <!-- Mobile Container -->
+    <main class="container">
+        <div id="list-view-mobile" class="listings-grid"></div>
+        <div id="map-container-mobile" class="hidden" style="width:100%; height:500px; border-radius:12px; margin-top:20px;"></div>
     </main>
 
-    <!-- Floating Action Button (Small + Only Icon) -->
+    <!-- Floating Action Button (Mobile Only) -->
     <div class="fab-container">
-        <button class="fab-btn" onclick="openPostAdModal()" title="ثبت آگهی جدید">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        <button class="fab-btn" onclick="openPostAdModal()">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
         </button>
     </div>
 
     <!-- Toast Container -->
     <div id="toast-container" class="toast-container"></div>
 
-    <!-- 1. Ad Details Modal -->
-    <div id="ad-modal" class="modal-overlay">
+    <!-- 1. Auth Modal (Login) -->
+    <div id="auth-modal" class="modal-overlay">
         <div class="modal-box">
             <div class="modal-header">
-                <h3>معلومات آگهی</h3>
-                <button class="close-btn" onclick="closeModal('ad-modal')">×</button>
+                <h3>ورود / ثبت نام</h3>
+                <button class="close-btn" onclick="closeModal('auth-modal')">×</button>
             </div>
-            <div class="modal-body" id="ad-modal-body"></div>
+            <div class="modal-body">
+                <form onsubmit="handleLogin(event)">
+                    <p style="text-align:center; color:#666; margin-bottom:15px;">لطفا شماره تلیفون خود را وارد کنید (رمزی لازم نیست).</p>
+                    <div class="form-group">
+                        <label class="form-label">شماره تلیفون</label>
+                        <input type="tel" id="login-phone" class="form-input" required placeholder="07..." style="direction:ltr; text-align:right;">
+                    </div>
+                    <button type="submit" class="btn-block" style="background:var(--primary-color); color:white;">ورود</button>
+                    <button type="button" class="btn-block" style="background:transparent; color:var(--text-secondary); margin-top:10px; border:none;" onclick="handleLogout()">خروج</button>
+                </form>
+            </div>
         </div>
     </div>
 
@@ -343,11 +317,11 @@
                         <input type="text" id="post-title" class="form-input" required placeholder="مثلاً فلت شیک...">
                     </div>
                     
-                    <!-- عکس آگهی -->
                     <div class="form-group">
-                        <label class="form-label">تصاویر (حداکثر ۱۰ عکس)</label>
-                        <input type="file" id="post-images" class="form-input" multiple accept="image/*" onchange="handleImagePreview(this)">
-                        <div class="image-previews" id="image-previews"></div>
+                        <label class="form-label">تصویر (حداکثر ۱ عدد)</label>
+                        <!-- محدودیت به ۱ عکس برای جلوگیری از پر شدن حافظه -->
+                        <input type="file" id="post-image" class="form-input" accept="image/*" onchange="handleImagePreview(this)">
+                        <div id="image-preview" style="margin-top:10px; width:100px; height:100px; border-radius:8px; object-fit:cover; display:none;"></div>
                     </div>
 
                     <div class="form-group">
@@ -357,20 +331,18 @@
 
                     <div class="form-group">
                         <label class="form-label">معلومات کامل</label>
-                        <textarea id="post-desc" class="form-textarea" rows="4" placeholder="جزئیات را بنویسید..."></textarea>
+                        <textarea id="post-desc" class="form-textarea" rows="3" placeholder="جزئیات..."></textarea>
                     </div>
+                    
                     <div class="form-group">
                         <label class="form-label">موقعیت دقیق روی نقشه</label>
-                        <button type="button" id="btn-loc-picker" class="btn-block btn-loc-picker" onclick="openLocationPicker()">
-                            <span>📍 انتخاب موقعیت روی نقشه</span>
+                        <button type="button" id="btn-loc-picker" class="btn-block" style="background:var(--accent-blue); color:white;" onclick="openLocationPicker()">
+                            📍 انتخاب موقعیت روی نقشه
                         </button>
                         <input type="hidden" id="post-lat"> <input type="hidden" id="post-lng">
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">شماره تماس</label>
-                        <input type="tel" id="post-phone" class="form-input" required placeholder="07...">
-                    </div>
-                    <button type="submit" class="btn-block btn-submit">انتشار آگهی</button>
+                    
+                    <button type="submit" class="btn-block" style="background:var(--accent-green); color:white;">انتشار آگهی</button>
                 </form>
             </div>
         </div>
@@ -384,11 +356,11 @@
                 <button class="close-btn" onclick="closeModal('location-picker-modal')">×</button>
             </div>
             <div class="modal-body">
-                <p style="margin-bottom:15px; font-size:0.95rem; color:#555; text-align:center;">روی نقشه کلیک کنید تا موقعیت دقیق ملک یا شغل مشخص شود.</p>
-                <div id="picker-map-container"></div>
-                <div class="picker-actions">
-                    <button class="btn-cancel" onclick="closeModal('location-picker-modal')">لغو</button>
-                    <button class="btn-confirm" onclick="confirmLocation()">تایید موقعیت</button>
+                <p style="margin-bottom:10px; font-size:0.9rem; color:#666;">روی نقشه کلیک کنید تا مکان مشخص شود.</p>
+                <div id="picker-map-container" style="width:100%; height:300px; border-radius:8px; margin-bottom:20px; border:2px solid #eee;"></div>
+                <div class="picker-actions" style="text-align:left;">
+                    <button class="btn-block" style="background:var(--primary-color); color:white;" onclick="confirmLocation()">تایید موقعیت</button>
+                    <button class="btn-block" style="background:transparent; color:#666; border:none;" onclick="closeModal('location-picker-modal')">لغو</button>
                 </div>
             </div>
         </div>
@@ -397,152 +369,171 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
-        // --- 1. Data ---
-        const listingsDB = [
-            { id: 1, type: 'realestate', subtype: 'sale', title: 'فلت فورنیش شده شیرپور', price: '۹۵,۰۰۰ دالر', desc: '۳ خوابه، ۱۴۰ متر، پارکینگ امن.', loc: 'کابل، شیرپور', lat: 34.5155, lng: 69.1807, img: 'https://picsum.photos/seed/r1/600/400', images: [] },
-            { id: 2, type: 'realestate', subtype: 'sale', title: 'خانه ویلایی هرات', price: '۴,۰۰۰,۰۰۰ افغانی', desc: '۵۰۰ متر، ویلا ویلایی.', loc: 'هرات، گلزار', lat: 34.3525, lng: 62.2038, img: 'https://picsum.photos/seed/r2/600/400', images: [] },
-            { id: 3, type: 'realestate', subtype: 'rent', title: 'آپارتمان کرایی', price: '۱۵,۰۰۰ افغانی/ماه', desc: '۲ خوابه، نورگیر.', loc: 'کابل، کارته سوم', lat: 34.5255, lng: 69.1500, img: 'https://picsum.photos/seed/r3/600/400', images: [] },
-            { id: 4, type: 'employment', subtype: null, title: 'مدیر فروش', price: '۳۰,۰۰۰ دالر/ماه', desc: 'شرکت آریانا.', loc: 'کابل', lat: 34.5150, lng: 69.1950, img: 'https://picsum.photos/seed/e1/600/400', images: [] },
-            { id: 5, type: 'jobhunting', subtype: null, title: 'آشپز ماهر', price: 'توافقی', desc: '۱۵ سال سابقه.', loc: 'کابل', lat: 34.5100, lng: 69.1700, img: 'https://picsum.photos/seed/j1/600/400', images: [] }
+        // --- 1. Configuration & Data Storage ---
+        const DB_KEY_LISTINGS = 'khana_listings';
+        const DB_KEY_USER = 'khana_user';
+        
+        // Data Loading from LocalStorage
+        let listingsDB = JSON.parse(localStorage.getItem(DB_KEY_LISTINGS)) || [
+            { id: 1715001, type: 'realestate', subtype: 'sale', title: 'فلت فورنیش شیرپور', price: '۹۵,۰۰۰ دالر', desc: '۳ خوابه، ۱۴۰ متر.', loc: 'کابل، شیرپور', owner: '0700000001', lat: 34.5155, lng: 69.1807, img: 'https://picsum.photos/seed/r1/600/400' },
+            { id: 1715002, type: 'realestate', subtype: 'rent', title: 'ویلا کرایی هرات', price: '۳۰,۰۰۰ افغانی/ماه', desc: '۵۰۰ متر، باغچه.', loc: 'هرات، گلزار', owner: '0700000002', lat: 34.3525, lng: 62.2038, img: 'https://picsum.photos/seed/r2/600/400' },
+            { id: 1715003, type: 'employment', subtype: null, title: 'مدیر فروش آریانا', price: '۳۰,۰۰۰ دالر', desc: 'نیاز به مدیر با سابقه.', loc: 'کابل', owner: '0700000003', lat: 34.5150, lng: 69.1950, img: 'https://picsum.photos/seed/e1/600/400' }
         ];
 
+        let currentUser = JSON.parse(localStorage.getItem(DB_KEY_USER)) || null;
+
+        // State
         let currentMainCategory = 'realestate';
         let currentSubCategory = 'sale';
-        // حالت پیش‌فرض دسکتاپ: list, map یا split
-        let desktopMode = 'list'; 
+        let currentViewType = 'all'; // all or myads
+        let searchQuery = '';
         let map = null, markersLayer = null;
         let pickerMap = null, pickerMarker = null;
         let selectedLat = null, selectedLng = null;
-        let selectedImages = []; // ذخیره عکس‌های انتخاب شده
-        let lastOpenedMarkerId = null;
+        let selectedImageBase64 = null;
 
         window.onload = function() { 
-            checkDesktopWidth(); 
+            checkAuth(); 
             renderList(); 
+            if(window.innerWidth >= 992) initMap();
         };
-        
-        function resetApp() { window.location.reload(); }
 
-        // --- 2. Navigation ---
+        // --- 2. Authentication System ---
+        function checkAuth() {
+            const btn = document.getElementById('btn-profile');
+            const text = document.getElementById('profile-text');
+            const avatar = document.getElementById('user-avatar');
+
+            if (currentUser) {
+                text.innerText = currentUser.phone;
+                avatar.innerText = currentUser.phone.substring(0,1).toUpperCase();
+                avatar.classList.remove('hidden');
+                // Show "My Ads" tab
+                document.getElementById('tab-myads').classList.remove('hidden');
+            } else {
+                text.innerText = 'پروفایل';
+                avatar.classList.add('hidden');
+                document.getElementById('tab-myads').classList.add('hidden');
+            }
+        }
+
+        function handleProfileClick() {
+            if (currentUser) {
+                // Show confirm logout
+                if(confirm('آیا می‌خواهید خارج شوید؟')) {
+                    handleLogout();
+                }
+            } else {
+                openModal('auth-modal');
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const phone = document.getElementById('login-phone').value;
+            if (phone.length < 10) {
+                showToast('لطفا شماره معتبر وارد کنید.', 'error');
+                return;
+            }
+            currentUser = { phone: phone, isLogged: true };
+            localStorage.setItem(DB_KEY_USER, JSON.stringify(currentUser));
+            checkAuth();
+            closeModal('auth-modal');
+            showToast(`خوش آمدید، ${phone}`, 'success');
+            renderList(); // Refresh list to show "My Ads"
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem(DB_KEY_USER);
+            checkAuth();
+            showToast('شما خارج شدید.', 'success');
+            renderList();
+        }
+
+        // --- 3. Navigation & View Logic ---
         function switchMainCategory(cat, btn) {
             currentMainCategory = cat;
             document.querySelectorAll('.cat-tab').forEach(el => el.classList.remove('active'));
             btn.classList.add('active');
+            
+            // Reset View to 'all' when switching main category
+            if(currentViewType === 'myads') {
+                // Optional: keep in myads? Let's switch back to all for better UX
+                currentViewType = 'all'; 
+            }
+
             const subTabs = document.getElementById('sub-category-tabs');
             if (cat === 'realestate') {
                 subTabs.style.display = 'flex';
                 currentSubCategory = 'sale';
-                document.querySelectorAll('.sub-cat-tab').forEach((el, index) => {
-                    el.classList.remove('active'); if(index===0) el.classList.add('active');
-                });
+                document.querySelectorAll('.sub-cat-tab').forEach((el, i) => { el.classList.remove('active'); if(i===0) el.classList.add('active'); });
             } else {
                 subTabs.style.display = 'none';
                 currentSubCategory = null;
             }
-            // در دسکتاپ اگر در حالت اسپلیت هستیم، با تغییر دسته‌بندی باید مارکرها آپدیت شوند
-            if(desktopMode === 'split') updateMapMarkers();
+            
             renderList();
+            updateMapMarkers(); // Update map for desktop split
         }
 
         function switchSubCategory(sub, btn) {
             currentSubCategory = sub;
             document.querySelectorAll('.sub-cat-tab').forEach(el => el.classList.remove('active'));
             btn.classList.add('active');
-            if(desktopMode === 'split') updateMapMarkers();
+            renderList();
+            updateMapMarkers();
+        }
+
+        function switchViewType(type, btn) {
+            // type: 'all' or 'myads'
+            if(btn) {
+                document.querySelectorAll('.cat-tab').forEach(el => el.classList.remove('active')); // Remove styling from others
+                if(btn) btn.classList.add('active');
+            }
+            
+            currentViewType = type;
+            renderList();
+            updateMapMarkers();
+        }
+
+        function handleSearch() {
+            const input = document.getElementById('search-input');
+            searchQuery = input.value.toLowerCase();
             renderList();
         }
 
-        function checkDesktopWidth() {
-            if (window.innerWidth >= 992) {
-                // دسکتاپ: حالت پیش‌فرض split نیست، مگر اینکه کاربر دکمه را بزند
-                // اما شما می‌خواهید در دسکتاپ نقشه چپ و لیست راست باشد.
-                // پس در دسکتاپ، همیشه split-view را فعال می‌کنیم؟ 
-                // بیایید منطق این را ساده کنیم: در دسکتوب همیشه اسپلیت باشد.
-                setDesktopMode('split');
-            } else {
-                // موبایل: حالت لیست پیش‌فرض
-                setDesktopMode('list');
-            }
-        }
-        
-        // چک کردن سایز پنجره هنگام تغییر اندازه
-        window.addEventListener('resize', checkDesktopWidth);
-
-        function setDesktopMode(mode) {
-            desktopMode = mode;
-            const listEl = document.getElementById('list-view');
-            const mapEl = document.getElementById('map-container');
-            const controls = document.getElementById('desktop-controls');
-            const btnList = document.getElementById('btn-list');
-            const btnMap = document.getElementById('btn-map');
-            const wrapper = document.getElementById('main-content-area');
-
-            if (window.innerWidth >= 992) {
-                // Desktop Behavior: Split View always active (as requested)
-                controls.classList.add('hide-in-split'); // مخفی کردن دکمه‌های بالا
-                wrapper.classList.add('desktop-split-view');
-                
-                listEl.classList.add('split-view');
-                mapEl.classList.add('split-view');
-                
-                listEl.style.display = 'flex'; // همیشه قابل مشاهده
-                mapEl.style.display = 'block'; // همیشه قابل مشاهده
-
-                if(mode === 'list') {
-                    // در حالت لیست، شاید می‌خواهید نقشه کوچکتر باشد؟ فعلاً برابر
-                    // بیایید فقط کلاس‌ها را عوض کنیم تا استایل بگیرند
-                }
-
-            } else {
-                // Mobile Behavior
-                controls.classList.remove('hide-in-split');
-                wrapper.classList.remove('desktop-split-view');
-                
-                listEl.classList.remove('split-view');
-                mapEl.classList.remove('split-view');
-
-                if (mode === 'list') {
-                    listEl.classList.remove('hidden'); 
-                    mapEl.style.display = 'none';
-                    listEl.style.display = 'grid'; // گرید برای لیست
-                    
-                    btnList.classList.add('active'); 
-                    btnMap.classList.remove('active');
-                } else {
-                    listEl.classList.add('hidden'); 
-                    mapEl.style.display = 'block';
-                    btnList.classList.remove('active'); 
-                    btnMap.classList.add('active');
-                    
-                    setTimeout(() => { if(!map) initMap(); map.invalidateSize(); updateMapMarkers(); }, 300);
-                }
-            }
-        }
-
-        // --- 3. Map Logic ---
+        // --- 4. Map Logic (Desktop Split View) ---
         function initMap() {
-            map = L.map('map-container').setView([34.5553, 69.2075], 6);
+            const mapId = (window.innerWidth >= 992) ? 'map-container' : 'map-container-mobile';
+            const el = document.getElementById(mapId);
+            if(!el || el.style.display === 'none') return;
+
+            map = L.map(mapId).setView([34.5553, 69.2075], 6);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
             markersLayer = L.layerGroup().addTo(map);
+
+            // Fix map render size issue
+            setTimeout(() => { map.invalidateSize(); }, 100);
         }
 
         function updateMapMarkers() {
-            if(!map) return;
+            if(!map || window.innerWidth < 992) return; // Only show markers in desktop split mode
+
             markersLayer.clearLayers();
-            let filtered = listingsDB.filter(item => item.type === currentMainCategory);
-            if (currentMainCategory === 'realestate' && currentSubCategory) {
-                filtered = filtered.filter(item => item.subtype === currentSubCategory);
-            }
+            let filtered = getFilteredList();
+            
+            if (filtered.length === 0) return;
 
             filtered.forEach(item => {
                 const marker = L.marker([item.lat, item.lng]);
                 const smallPopup = `
-                    <div style="text-align:right; direction:rtl;">
-                        <img src="${item.img}" class="popup-small-img">
-                        <div class="popup-small-body">
-                            <div style="font-weight:bold; font-size:12px; color:#333;">${item.title}</div>
-                            <div style="font-size:11px; color:#a62626; font-weight:700; margin-top:4px;">${item.price}</div>
-                            <button onclick="openAdModal(${item.id})" style="font-size:11px; color:#3b82f6; text-decoration:underline; border:none; background:none; cursor:pointer; margin-top:4px;">مشاهده</button>
+                    <div style="text-align:right; direction:rtl; min-width:200px;">
+                        <img src="${item.img}" style="width:100%; height:100px; object-fit:cover; border-radius:4px;">
+                        <div style="padding:8px;">
+                            <div style="font-weight:bold; font-size:13px;">${item.title}</div>
+                            <div style="font-size:11px; color:#a62626; margin-top:2px;">${item.price}</div>
+                            <button onclick="openAdModal(${item.id})" style="background:none; border:none; color:#3b82f6; cursor:pointer; font-size:11px; text-decoration:underline; margin-top:4px;">مشاهده</button>
                         </div>
                     </div>`;
                 marker.bindPopup(smallPopup);
@@ -550,91 +541,103 @@
             });
         }
 
-        // --- 4. List Logic ---
-        function renderList() {
-            const container = document.getElementById('list-view');
-            container.innerHTML = '';
+        // --- 5. List Logic ---
+        function getFilteredList() {
             let filtered = listingsDB.filter(item => item.type === currentMainCategory);
             if (currentMainCategory === 'realestate' && currentSubCategory) {
                 filtered = filtered.filter(item => item.subtype === currentSubCategory);
             }
+
+            // Search Filter
+            if (searchQuery) {
+                filtered = filtered.filter(item => item.title.toLowerCase().includes(searchQuery));
+            }
+
+            // User Filter (My Ads)
+            if (currentViewType === 'myads' && currentUser) {
+                filtered = filtered.filter(item => item.owner === currentUser.phone);
+            }
+
+            return filtered;
+        }
+
+        function renderList() {
+            // Desktop List (Sidebar)
+            const listDesktop = document.getElementById('list-view');
+            // Mobile List
+            const listMobile = document.getElementById('list-view-mobile');
             
-            // آپدیت تعداد نتایج
-            document.getElementById('result-count').innerText = `در حال حاضر ${filtered.length} آگهی موجود است.`;
+            listDesktop.innerHTML = '';
+            listMobile.innerHTML = '';
+
+            let filtered = getFilteredList();
+
+            // Desktop Header in List Sidebar
+            if(window.innerWidth >= 992) {
+                const count = document.createElement('div');
+                count.style.padding = '10px 12px; font-weight:700; color:#666; font-size:0.9rem; border-bottom:1px solid #eee;';
+                count.innerText = `نتایج: ${filtered.length} آگهی`;
+                listDesktop.appendChild(count);
+            }
 
             if (filtered.length === 0) {
-                container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:#888;">در حال حاضر آگهی یافت نشد.</div>';
+                const empty = '<div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:#888;">موردی یافت نشد.</div>';
+                listDesktop.innerHTML = empty;
+                listMobile.innerHTML = empty;
                 return;
             }
+
             filtered.forEach(item => {
+                const isOwner = currentUser && item.owner === currentUser.phone;
+                
                 const card = document.createElement('div');
                 card.className = 'card';
-                // در دسکتوب اسپلیت، کارت‌ها ۱۰۰٪ عرض نباشند، متناسب شبکه
-                card.style.width = "100%";
                 
-                card.onclick = () => openAdModal(item);
+                let deleteBtnHtml = '';
+                if(isOwner) {
+                    deleteBtnHtml = `<button class="card-delete" onclick="deleteAd(${item.id})" title="حذف">×</button>`;
+                }
+
                 card.innerHTML = `
-                    <div class="card-tag">${item.type==='realestate' ? (item.subtype==='sale'?'فروشی':(item.subtype==='rent'?'کرایی':'گروی')) : (item.type==='employment'?'استخدام':'کارجویی')}</div>
                     <img src="${item.img}" class="card-img">
                     <div class="card-body">
+                        <div class="card-tag">${item.type==='realestate' ? (item.subtype==='sale'?'فروشی':(item.subtype==='rent'?'کرایی':'گروی')) : (item.type==='employment'?'استخدام':'کارجویی')}</div>
+                        ${deleteBtnHtml}
                         <div class="card-title">${item.title}</div>
                         <div class="card-meta">📍 ${item.loc}</div>
                         <div class="card-price">${item.price}</div>
-                    </div>`;
-                container.appendChild(card);
+                    </div>
+                `;
+                
+                card.onclick = (e) => {
+                    if(!e.target.classList.contains('card-delete')) {
+                        openAdModal(item);
+                    }
+                };
+
+                // Clone for mobile and desktop
+                listDesktop.appendChild(card.cloneNode(true));
+                listMobile.appendChild(card.cloneNode(true));
             });
         }
 
-        // --- 5. Image Preview Logic ---
-        function handleImagePreview(input) {
-            const container = document.getElementById('image-previews');
-            container.innerHTML = '';
-            selectedImages = [];
-
-            if (input.files.length > 10) {
-                showToast('حداکثر ۱۰ عکس مجاز است.', 'error');
-                input.value = ''; // پاک کردن ورودی
+        // --- 6. Post Ad Form Logic ---
+        function openPostAdModal() {
+            if (!currentUser) {
+                showToast('برای ثبت آگهی ابتدا وارد شوید (پروفایل).', 'error');
+                handleProfileClick();
                 return;
             }
 
-            Array.from(input.files).forEach((file, index) => {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const div = document.createElement('div');
-                    div.className = 'preview-thumb';
-                    div.innerHTML = `
-                        <img src="${e.target.result}" style="width:100%; height:100%;">
-                        <span onclick="removeImage(${index})">×</span>
-                    `;
-                    container.appendChild(div);
-                }
-                reader.readAsDataURL(file);
-                // ذخیره فایل برای ارسال (در اینجا سیموله می‌کنیم چون سرور واقعی نداریم)
-                selectedImages.push(file);
-            });
-        }
-
-        function removeImage(index) {
-            const container = document.getElementById('image-previews');
-            const thumbs = container.children;
-            if(thumbs[index]) {
-                thumbs[index].remove();
-                selectedImages.splice(index, 1);
-            }
-        }
-
-        // --- 6. Post Ad Modal ---
-        function openPostAdModal() {
             document.getElementById('post-ad-form').reset();
-            // ریست کردن عکس‌ها
-            document.getElementById('image-previews').innerHTML = '';
-            selectedImages = [];
-            
+            document.getElementById('image-preview').style.display = 'none';
+            selectedImageBase64 = null;
+
             document.getElementById('post-lat').value = '';
             document.getElementById('post-lng').value = '';
-            document.getElementById('btn-loc-picker').classList.remove('selected');
-            document.getElementById('btn-loc-picker').innerHTML = '<span>📍 انتخاب موقعیت روی نقشه</span>';
-            selectedLat = null; selectedLng = null;
+            const btn = document.getElementById('btn-loc-picker');
+            btn.classList.remove('expanded');
+            btn.innerHTML = '📍 انتخاب موقعیت روی نقشه';
 
             const catSelect = document.getElementById('post-category');
             const subGroup = document.getElementById('post-subcategory-group');
@@ -662,22 +665,41 @@
 
             if (cat === 'realestate') {
                 if (sub === 'sale') {
-                    html = `<div class="form-group"><label class="form-label">قیمت کل</label><input type="text" id="inp-price" class="form-input" required placeholder="مثلاً ۱۰۰,۰۰۰ دالر"></div>
-                           <div class="form-group"><label class="form-label">فی متر مربع</label><input type="text" id="inp-price-sqm" class="form-input"></div>
-                           <div class="form-group"><label class="form-label">متراژ</label><input type="number" id="inp-area" class="form-input" required></div>`;
+                    html = `<div class="form-group"><label class="form-label">قیمت کل</label><input type="text" id="inp-price" class="form-input" required placeholder="مثلاً ۱۰۰,۰۰۰ دالر"></div>`;
                 } else if (sub === 'rent') {
-                    html = `<div class="form-group"><label class="form-label">کرایی ماهانه</label><input type="text" id="inp-price" class="form-input" required></div>
-                           <div class="form-group"><label class="form-label">ودیعه (پول پیش)</label><input type="text" id="inp-deposit" class="form-input"></div>`;
+                    html = `<div class="form-group"><label class="form-label">کرایی ماهانه</label><input type="text" id="inp-price" class="form-input" required></div>`;
                 } else {
                     html = `<div class="form-group"><label class="form-label">مبلغ کل گرو</label><input type="text" id="inp-price" class="form-input" required></div>`;
                 }
             } else if (cat === 'employment') {
-                html = `<div class="form-group"><label class="form-label">حقوق</label><input type="text" id="inp-salary" class="form-input" required></div>
-                       <div class="form-group"><label class="form-label">نوع پرداخت</label><select id="inp-salary-type" class="form-select"><option value="ماهانه">ماهانه</option><option value="ساعتی">ساعتی</option><option value="روزانه">روزانه</option></select></div>`;
+                html = `<div class="form-group"><label class="form-label">حقوق پیشنهادی</label><input type="text" id="inp-salary" class="form-input" required></div>`;
             } else if (cat === 'jobhunting') {
                 html = `<div class="form-group"><label class="form-label">حقوق درخواستی</label><input type="text" id="inp-salary" class="form-input"></div>`;
             }
             container.innerHTML = html;
+        }
+
+        // Image Preview (Single Image for Demo)
+        function handleImagePreview(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                
+                // Size check (Limit to 500KB for LocalStorage safety)
+                if(file.size > 500 * 1024) {
+                    showToast('حجم تصویر باید کمتر از ۵۰۰ کیلوبایت باشد (محدودیت نسخه دمو).', 'error');
+                    input.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    selectedImageBase64 = e.target.result; // Save Base64 string
+                    const preview = document.getElementById('image-preview');
+                    preview.src = selectedImageBase64;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
         }
 
         // --- 7. Location Picker Logic ---
@@ -696,19 +718,27 @@
                 } else {
                     pickerMap.invalidateSize();
                 }
-            }, 300);
+            }, 200);
         }
 
         function confirmLocation() {
             if (!selectedLat) { showToast('لطفا روی نقشه کلیک کنید.', 'error'); return; }
             document.getElementById('post-lat').value = selectedLat;
             document.getElementById('post-lng').value = selectedLng;
+            
+            // UX: Expand button to show coordinates
             const btn = document.getElementById('btn-loc-picker');
-            btn.classList.add('selected');
-            btn.innerHTML = '<span>✅ موقعیت ثبت شد</span>';
+            btn.classList.add('expanded');
+            btn.innerHTML = `
+                <span>✅ موقعیت ثبت شد</span>
+                <div class="loc-info">Lat: ${parseFloat(selectedLat).toFixed(4)}</div>
+                <div class="loc-info">Lng: ${parseFloat(selectedLng).toFixed(4)}</div>
+            `;
+            
             closeModal('location-picker-modal');
         }
 
+        // --- 8. Handle Post Submit (Save to LocalStorage) ---
         function handlePostSubmit(e) {
             e.preventDefault();
             const lat = document.getElementById('post-lat').value;
@@ -720,95 +750,125 @@
             const title = document.getElementById('post-title').value;
             const address = document.getElementById('post-address').value;
             const desc = document.getElementById('post-desc').value;
-            let priceText = (cat === 'realestate') ? document.getElementById('inp-price').value : document.getElementById('inp-salary').value;
-
-            // استفاده از اولین عکس آپلود شده، اگر وجود داشت
-            const coverImg = selectedImages.length > 0 ? URL.createObjectURL(selectedImages[0]) : 'https://picsum.photos/seed/' + Date.now() + '/600/400';
+            
+            // Use dynamic price or default
+            const priceInput = document.getElementById('inp-price');
+            const salaryInput = document.getElementById('inp-salary');
+            let priceText = priceInput ? priceInput.value : (salaryInput ? salaryInput.value : 'توافقی');
 
             const newAd = {
-                id: Date.now(), type: cat, subtype: sub, title: title, price: priceText || 'توافقی', 
-                desc: desc, loc: address || 'آگهی جدید', lat: parseFloat(lat), lng: parseFloat(lng), 
-                img: coverImg, images: []
+                id: Date.now(), 
+                type: cat, 
+                subtype: sub, 
+                title: title, 
+                price: priceText, 
+                desc: desc, 
+                loc: address || 'آگهی جدید', 
+                lat: parseFloat(lat), 
+                lng: parseFloat(lng), 
+                owner: currentUser.phone, // Link to user
+                img: selectedImageBase64 || 'https://picsum.photos/seed/' + Date.now() + '/600/400' // Base64 or default
             };
 
+            // Save to LocalStorage
             listingsDB.unshift(newAd);
+            localStorage.setItem(DB_KEY_LISTINGS, JSON.stringify(listingsDB));
+
             closeModal('post-modal');
-            
-            // سوئیچ به دسته‌بندی صحیح
-            if (currentMainCategory !== cat || currentSubCategory !== sub) {
-                if(cat === 'realestate') {
-                    const mainTabs = document.querySelectorAll('.cat-tab'); if(mainTabs[0]) switchMainCategory('realestate', mainTabs[0]);
-                    const subTabs = document.querySelectorAll('.sub-cat-tab'); let idx = (sub==='sale'?0:(sub==='rent'?1:2)); if(subTabs[idx]) switchSubCategory(sub, subTabs[idx]);
-                } else {
-                    const mainTabs = document.querySelectorAll('.cat-tab'); let idx = (cat==='employment'?1:2); if(mainTabs[idx]) switchMainCategory(cat, mainTabs[idx]);
-                }
-            }
-            
-            // آپدیت نقشه در حالت اسپلیت دسکتاپ
-            if(window.innerWidth >= 992) {
-                updateMapMarkers();
-            }
-            
-            renderList();
             showToast('✅ آگهی شما با موفقیت ثبت شد!', 'success');
+            
+            // Switch view to 'all' to show the new ad in list
+            if(currentViewType === 'myads') {
+                 // Just re-render list locally, no need to switch tab object, just logic
+                 // We need to find the tab object for 'all' manually or just reset type
+                 // Simulating clicking 'all' tab:
+                 document.getElementById('tab-myads').classList.add('hidden'); // Hide My Ads
+                 // Need to find main tabs... actually we can just reset variable:
+                 // But user wants to see "My Ads" after posting? 
+                 // Let's assume user wants to see the new ad.
+            }
+            renderList();
+            updateMapMarkers();
         }
 
-        // --- 8. Ad Detail Logic ---
-        function openAdModalById(id) {
-            const item = listingsDB.find(i => i.id === id);
-            if(item) openAdModal(item);
+        // --- 9. Delete Logic ---
+        function deleteAd(id) {
+            if(confirm('آیا مطمئن هستید که می‌خواهید این آگهی را حذف کنید؟')) {
+                listingsDB = listingsDB.filter(item => item.id !== id);
+                localStorage.setItem(DB_KEY_LISTINGS, JSON.stringify(listingsDB));
+                renderList();
+                updateMapMarkers();
+                showToast('آگهی حذف شد.', 'success');
+            }
         }
 
+        // --- 10. Ad Detail Logic ---
         function openAdModal(item) {
             const modal = document.getElementById('ad-modal');
-            const body = document.getElementById('ad-modal-body');
+            // We reuse post modal for viewing details (simplification for single file)
+            const body = document.getElementById('post-modal').querySelector('.modal-body');
             
+            // Check ownership for delete button
+            const isOwner = currentUser && item.owner === currentUser.phone;
+            
+            // Build detail view HTML
+            let deleteHtml = isOwner ? `<button onclick="deleteAd(${item.id}); event.stopPropagation();" style="position:fixed; top:80px; left:80%; background:#dc2626; color:white; border:none; padding:8px 16px; border-radius:8px; z-index:9999; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.2);">حذف آگهی</button>` : '';
+
             body.innerHTML = `
-                <img src="${item.img}" class="detail-img">
-                <h2 style="margin-bottom:10px;">${item.title}</h2>
-                <div class="detail-price">${item.price}</div>
-                <div class="detail-meta">
-                    <span>📅 امروز</span>
-                    <span>📍 ${item.loc}</span>
-                </div>
+                <h2 style="margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:10px;">${item.title}</h2>
+                <div style="font-size:1.5rem; color:var(--primary-color); font-weight:900; margin-bottom:15px;">${item.price}</div>
+                <div style="margin-bottom:20px; color:#555;">📍 ${item.loc}</div>
+                <img src="${item.img}" style="width:100%; height:250px; object-fit:cover; border-radius:8px; margin-bottom:20px;">
                 
                 <h4 style="margin-bottom:10px; color:#333;">معلومات:</h4>
-                <p style="line-height:1.7; color:#444; margin-bottom:20px;">${item.desc}</p>
+                <p style="line-height:1.6; color:#444; margin-bottom:30px;">${item.desc}</p>
 
-                <div class="detail-actions">
-                    <button class="btn-action btn-contact" onclick="alert('شماره تماس: 07XXXXXXXX')">📞 تماس گرفتن</button>
-                    <button class="btn-action btn-map-loc" onclick="focusOnMap(${item.lat}, ${item.lng})">📍 رفتن به نقشه</button>
+                <div class="picker-actions" style="display:flex; gap:10px;">
+                    <button type="button" class="btn-block" style="background:var(--accent-blue); color:white;" onclick="alert('شماره تماس: ' + item.owner)">📞 تماس با فروشنده</button>
                 </div>
+                ${deleteHtml}
+                <button style="position:absolute; top:15px; left:15px; background:#eee; border:none; border-radius:50%; width:30px; height:30px; cursor:pointer;" onclick="closeModal('post-modal')">✕</button>
             `;
-            modal.style.display = 'flex';
-        }
-
-        function focusOnMap(lat, lng) {
-            closeModal('ad-modal');
-            // در موبایل سوییچ ویو لازم است، در دسکتاپ اسپلیت نقشه جلو است
-            if(window.innerWidth < 992) setDesktopMode('map');
             
-            setTimeout(() => {
-                if(!map) initMap();
-                map.flyTo([lat, lng], 16, { duration: 1.5 });
-                markersLayer.eachLayer(layer => {
-                    const ll = layer.getLatLng();
-                    if(ll.lat === lat && ll.lng === lng) layer.openPopup();
-                });
-            }, 350);
+            // We hijack the post modal to show details (simpler than creating a new modal HTML)
+            // Change title dynamically
+            const headerTitle = document.querySelector('#post-modal h3');
+            headerTitle.innerText = "جزئیات آگهی";
+
+            // Hide submit button
+            const submitBtn = document.querySelector('#post-modal button[type="submit"]');
+            if(submitBtn) submitBtn.style.display = 'none';
+
+            // Open modal
+            document.getElementById('post-modal').style.display = 'flex';
         }
 
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        window.onclick = function(e) { if (e.target.classList.contains('modal-overlay')) { e.target.style.display = 'none'; } }
+        // Utilities
+        function closeModal(id) { 
+            // If closing the post-modal, ensure it resets to "Post" mode if reopened
+            if(id === 'post-modal') {
+                const headerTitle = document.querySelector('#post-modal h3');
+                if(headerTitle) headerTitle.innerText = "ثبت آگهی جدید";
+                const submitBtn = document.querySelector('#post-modal button[type="submit"]');
+                if(submitBtn) submitBtn.style.display = 'block';
+            }
+            document.getElementById(id).style.display = 'none'; 
+        }
+        
+        window.onclick = function(e) { 
+            if (e.target.classList.contains('modal-overlay')) { 
+                closeModal('post-modal'); // ensure post modal resets
+                e.target.style.display = 'none'; 
+            } 
+        }
 
-        // --- 9. Toast Notification ---
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            toast.innerHTML = type === 'success' ? '✅ ' + message : '⚠️ ' + message;
+            toast.innerText = message;
             container.appendChild(toast);
-            setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(20px)'; setTimeout(() => toast.remove(), 300); }, 3000);
+            setTimeout(() => { toast.remove(); }, 3000);
         }
     </script>
 </body>
