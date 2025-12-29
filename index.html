@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>خانه | آگهی‌های افغانستان</title>
-    <!-- فونت وزیرمتن (دری) -->
+    <!-- فونت وزیرمتن -->
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     
     <!-- استایل نقشه Leaflet -->
@@ -12,8 +12,8 @@
 
     <style>
         :root {
-            --primary-color: #a62626; /* رنگ قرمز برند */
-            --primary-hover: #e26060;
+            --primary-color: #a62626;
+            --primary-hover: #861c1c;
             --accent-green: #00a693;
             --text-main: #002f34;
             --text-secondary: #5d7579;
@@ -24,17 +24,15 @@
             --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
             --radius-md: 12px;
             --radius-sm: 8px;
-            --font-family: 'Vazirmatn', sans-serif;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body { 
             background-color: var(--bg-body); 
             color: var(--text-main); 
-            font-family: var(--font-family);
-            padding-top: 80px; /* فاصله برای هدر */
-            padding-bottom: 100px; /* فاصله برای دکمه پایین */
+            padding-top: 70px; /* هدر کوچکتر */
+            padding-bottom: 90px; 
             min-height: 100vh;
             scroll-behavior: smooth;
         }
@@ -43,181 +41,207 @@
         header {
             background: var(--bg-white); 
             box-shadow: var(--shadow-sm); 
-            position: relative; /* برای جلوگیری از پوشش UI */
+            position: fixed; 
             top: 0; left: 0; right: 0; 
-            z-index: 100; 
-            padding: 12px 0;
+            z-index: 1000; 
+            padding: 10px 0;
             border-bottom: 1px solid #f0f0f0;
         }
         .header-container {
             max-width: 1200px; margin: 0 auto; padding: 0 20px; 
             display: flex; align-items: center; justify-content: space-between; gap: 16px;
         }
-        .logo-area { font-weight: 900; font-size: 1.6rem; color: var(--primary-color); cursor: pointer; white-space: nowrap; user-select: none; }
+        .logo-area { font-weight: 900; font-size: 1.4rem; color: var(--primary-color); cursor: pointer; white-space: nowrap; }
         
         .search-wrapper { flex-grow: 1; max-width: 500px; position: relative; }
         .search-input {
-            width: 100%; padding: 12px 45px 12px 16px; border: 1px solid var(--border-color);
-            border-radius: 50px; background-color: #f9f9f9; font-size: 0.95rem; outline: none; transition: all 0.3s;
+            width: 100%; padding: 10px 45px 10px 15px; border: 1px solid var(--border-color);
+            border-radius: var(--radius-md); background-color: #f9f9f9; font-size: 0.95rem; outline: none; transition: border 0.2s;
         }
-        .search-input:focus { background-color: var(--bg-white); border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(166,38,38,0.1); }
-        .search-icon { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); width: 20px; height: 20px; }
+        .search-input:focus { background-color: var(--bg-white); border-color: var(--primary-color); }
+        .search-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); width: 20px; height: 20px; }
 
         /* --- Categories --- */
-        .category-tabs-wrapper { background: white; border-bottom: 1px solid #f0f0f0; }
+        .category-tabs-wrapper { background: white; border-bottom: 1px solid #eee; }
         .category-tabs {
-            max-width: 1200px; margin: 0 auto; padding: 10px 20px 5px 20px; display: flex; gap: 12px; overflow-x: auto;
-            /* مخفی کردن اسکرول بار */
-            scrollbar-width: none; -ms-overflow-style: none;
+            max-width: 1200px; margin: 0 auto; padding: 12px 20px 5px 20px; display: flex; gap: 10px; overflow-x: auto;
         }
-        .category-tabs::-webkit-scrollbar { display: none; }
-
         .cat-tab {
             padding: 10px 24px; border: 1px solid var(--border-color); border-radius: 50px; background: white;
-            cursor: pointer; white-space: nowrap; font-weight: 700; color: var(--text-secondary); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer; white-space: nowrap; font-weight: 700; color: var(--text-secondary); transition: all 0.2s;
         }
-        .cat-tab.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); box-shadow: 0 4px 12px rgba(166,38,38,0.25); transform: translateY(-1px); }
-        .cat-tab:hover:not(.active) { background-color: #f5f5f5; color: var(--text-main); }
+        .cat-tab.active { background-color: var(--primary-color); color: white; border-color: var(--primary-color); box-shadow: 0 2px 5px rgba(166,38,38,0.2); }
+        .cat-tab:hover:not(.active) { background-color: #f5f5f5; }
 
         .sub-category-tabs {
-            max-width: 1200px; margin: 0 auto; padding: 0 20px 10px 20px; display: none; gap: 12px; overflow-x: auto;
+            max-width: 1200px; margin: 0 auto; padding: 0 20px 8px 20px; display: none; gap: 10px; overflow-x: auto;
         }
         .sub-cat-tab {
             padding: 6px 16px; border-bottom: 3px solid transparent; background: none;
-            cursor: pointer; font-weight: 600; color: var(--text-secondary); font-size: 0.95rem; transition: all 0.2s;
+            cursor: pointer; font-weight: 600; color: var(--text-secondary); font-size: 0.95rem;
         }
         .sub-cat-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
 
-        /* --- Main Content --- */
+        /* --- Main Content Layout --- */
         .container { max-width: 1200px; margin: 20px auto; padding: 0 20px; }
-        
         .view-controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 10px; }
         .result-count { font-size: 0.9rem; color: var(--text-secondary); }
-        .view-toggle-group { display: flex; background: white; border-radius: 8px; border: 1px solid var(--border-color); overflow: hidden; }
+        
+        .view-toggle-group { display: flex; background: white; border-radius: var(--radius-sm); border: 1px solid var(--border-color); overflow: hidden; flex-shrink: 0; }
         .view-btn {
-            padding: 8px 16px; border: none; background: white; border-left: 1px solid var(--border-color);
+            padding: 8px 16px; background: white; border: none; border-left: 1px solid var(--border-color);
             cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: 600; color: var(--text-secondary); transition: all 0.2s;
         }
         .view-btn:first-child { border-left: none; }
         .view-btn.active { background-color: var(--text-main); color: white; }
 
-        /* --- Cards --- */
-        .listings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
-        .card { background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; }
-        .card:hover { box-shadow: var(--shadow-lg); transform: translateY(-5px); border-color: #d0d0d0; }
-        
-        .card-tag { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,0.75); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; backdrop-filter: blur(4px); z-index: 2; }
-        .card-img { width: 100%; height: 180px; object-fit: cover; background-color: #f0f0f0; }
+        /* --- Desktop Split View Style --- */
+        /* در دسکتاپ: نقشه چپ، لیست راست */
+        @media (min-width: 992px) {
+            .desktop-split-view {
+                display: flex; gap: 20px; height: 700px; /* ارتفاع مشخص برای اسکرول */
+                align-items: flex-start;
+            }
+            
+            /* سمت چپ: نقشه */
+            #map-container.split-view {
+                display: block; width: 40%; height: 100%; border-radius: var(--radius-md); 
+                box-shadow: var(--shadow-sm); flex-shrink: 0;
+            }
+            
+            /* سمت راست: لیست آگهی */
+            #list-view.split-view {
+                display: flex; flex-direction: column; width: 60%; height: 100%;
+                overflow-y: auto; /* اسکرول مستقل */
+                flex-shrink: 0;
+            }
+
+            /* مخفی کردن کنترل‌های عادی هنگام حالت اسپلیت */
+            .view-controls.hide-in-split { display: none; }
+        }
+
+        /* --- Mobile (Normal behavior) --- */
+        .listings-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; padding-bottom: 20px; }
+        .card { background: white; border: 1px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden; cursor: pointer; transition: all 0.2s; position: relative; width: 100%; }
+        .card:hover { box-shadow: 0 5px 15px rgba(0,0,0,0.1); transform: translateY(-3px); }
+        .card-tag { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.75); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; backdrop-filter: blur(4px); z-index: 2; }
+        .card-img { width: 100%; height: 180px; object-fit: cover; background: #eee; }
         .card-body { padding: 16px; }
-        .card-title { font-weight: 800; margin-bottom: 8px; line-height: 1.4; font-size: 1.05rem; color: var(--text-main); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .card-meta { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-        .card-price { font-weight: 900; font-size: 1.1rem; color: var(--text-main); }
+        .card-title { font-weight: 800; margin-bottom: 8px; line-height: 1.4; font-size: 1rem; color: var(--text-main); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-meta { font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+        .card-price { font-weight: 800; color: var(--text-main); font-size: 1.1rem; }
 
-        #map-container { display: none; width: 100%; height: 650px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); z-index: 1; }
-
-        /* --- Floating Action Button --- */
+        /* --- Floating Action Button (Small + Icon) --- */
         .fab-container {
-            position: fixed; bottom: 30px; left: 30px; z-index: 900;
+            position: fixed; bottom: 30px; left: 30px; z-index: 2000;
         }
         .fab-btn {
             background-color: var(--primary-color); color: white; border: none;
-            padding: 16px 28px; border-radius: 50px;
-            font-weight: 800; font-size: 1rem;
-            box-shadow: 0 6px 20px rgba(166, 38, 38, 0.4);
+            padding: 14px 16px; /* کوچک کردن دکمه */
+            border-radius: 50px;
+            font-weight: 800; font-size: 0; /* مخفی کردن متن */
+            box-shadow: 0 4px 15px rgba(166, 38, 38, 0.4);
             cursor: pointer;
-            display: flex; align-items: center; gap: 10px;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 50px; height: 50px;
         }
-        .fab-btn:hover { transform: scale(1.05) rotate(-2deg); background-color: var(--primary-hover); box-shadow: 0 8px 25px rgba(166, 38, 38, 0.5); }
-        .fab-btn:active { transform: scale(0.95); }
+        .fab-btn svg { width: 24px; height: 24px; } /* سایز آیکون */
+        .fab-btn:hover {
+            transform: scale(1.1) rotate(0deg);
+            background-color: var(--primary-hover);
+        }
 
         /* --- Modals --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65);
-            z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(4px);
+            z-index: 3000; display: none; justify-content: center; align-items: center;
         }
         .modal-box {
-            background: white; width: 90%; max-width: 800px; max-height: 90vh; 
-            border-radius: 16px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            background: white; width: 90%; max-width: 850px; max-height: 90vh; 
+            border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             display: flex; flex-direction: column; 
-            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .modal-header { padding: 20px 24px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background: white; border-top-left-radius: 16px; border-top-right-radius: 16px; }
-        .modal-header h3 { font-size: 1.3rem; color: var(--text-main); font-weight: 800; }
+        .modal-header { padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; background: white; border-top-left-radius: 16px; border-top-right-radius: 16px; }
+        .modal-header h3 { font-size: 1.3rem; color: var(--text-main); }
         .modal-body { padding: 24px; overflow-y: auto; flex-grow: 1; }
-        .close-btn { background: #f5f5f5; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #555; transition: all 0.2s; }
-        .close-btn:hover { background: #e0e0e0; color: #000; transform: rotate(90deg); }
+        .close-btn { background: #f0f0f0; border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #555; transition: background 0.2s; }
+        .close-btn:hover { background: #e0e0e0; color: #000; }
 
         /* Modal Detail Styles */
-        .detail-img { width: 100%; height: 280px; object-fit: cover; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .detail-price { font-size: 1.7rem; color: var(--primary-color); font-weight: 900; margin-bottom: 8px; letter-spacing: -0.5px; }
-        .detail-meta { font-size: 0.9rem; color: #666; margin-bottom: 24px; display: flex; gap: 20px; background: #f9f9f9; padding: 10px; border-radius: 8px; }
+        .detail-img { width: 100%; height: 300px; object-fit: cover; border-radius: 12px; margin-bottom: 20px; }
+        .detail-price { font-size: 1.8rem; color: var(--primary-color); font-weight: 900; margin-bottom: 8px; letter-spacing: -0.5px; }
+        .detail-meta { font-size: 0.95rem; color: #666; margin-bottom: 20px; display: flex; gap: 20px; background: #f9f9f9; padding: 12px; border-radius: 10px; }
         .detail-actions { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
         .btn-action {
             flex: 1; padding: 14px; border: none; border-radius: 8px; font-weight: 800; cursor: pointer;
             display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 1rem;
-            min-width: 160px; transition: transform 0.2s;
+            min-width: 150px; transition: transform 0.1s;
         }
         .btn-action:active { transform: scale(0.98); }
         .btn-contact { background-color: var(--accent-green); color: white; }
-        .btn-map-loc { background-color: #2563eb; color: white; }
+        .btn-map-loc { background-color: #3b82f6; color: white; }
 
-        /* Form Styles */
+        /* --- Form Styles --- */
         .form-group { margin-bottom: 20px; }
         .form-label { display: block; margin-bottom: 8px; font-weight: 700; font-size: 0.9rem; color: var(--text-main); }
         .form-input, .form-textarea, .form-select { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-family: inherit; font-size: 0.95rem; transition: border 0.2s; background: white; }
         .form-input:focus, .form-select:focus { border-color: var(--primary-color); outline: none; box-shadow: 0 0 0 3px rgba(166,38,38,0.05); }
         
         .btn-block { width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
-        .btn-loc-picker { background-color: #3b82f6; color: white; margin-bottom: 16px; }
-        .btn-loc-picker:hover { background-color: #2563eb; }
-        .btn-submit { background-color: var(--accent-green); color: white; margin-bottom: 0; }
-        .btn-submit:hover { background-color: #008c7c; }
+        .btn-loc-picker { background: #3b82f6; color: white; margin-bottom: 16px; }
+        .btn-loc-picker:hover { background: #2563eb; }
+        .btn-submit { background: var(--accent-green); color: white; margin-bottom: 0; }
+        .btn-submit:hover { background: #008c7c; }
 
-        /* Picker Modal */
-        #location-picker-modal .modal-box { max-width: 600px; height: 80vh; }
-        #picker-map-container { width: 100%; height: 400px; border-radius: 12px; margin-bottom: 20px; border: 2px solid #eee; flex-shrink: 0; overflow: hidden; }
-        .picker-actions { display: flex; gap: 12px; justify-content: flex-end; flex-shrink: 0; }
-        .btn-cancel { background: #9ca3af; color: white; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-weight: 700; border: none; }
-        .btn-confirm { background: var(--primary-color); color: white; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-weight: 700; border: none; }
-
-        /* Toast Notification */
-        .toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 4000; display: flex; flex-direction: column; gap: 10px; }
-        .toast {
-            background: #333; color: white; padding: 12px 24px; border-radius: 50px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 0.95rem; font-weight: 500;
-            display: flex; align-items: center; gap: 10px;
-            animation: toastSlide 0.3s ease-out;
+        /* Image Upload Styles */
+        .image-previews { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        .preview-thumb {
+            width: 80px; height: 80px; border-radius: 8px; border: 1px solid #ddd; object-fit: cover;
+            position: relative; cursor: pointer;
         }
-        .toast.success { background: #065f46; }
-        .toast.error { background: #991b1b; }
+        .preview-thumb span { 
+            position: absolute; top: -5px; right: -5px; background: #dc2626; color: white;
+            width: 20px; height: 20px; border-radius: 50%; text-align: center;
+            line-height: 18px; font-size: 12px; cursor: pointer;
+        }
 
-        /* Leaflet Popup */
+        /* Picker Modal Specifics */
+        #location-picker-modal .modal-box { max-width: 600px; height: 85vh; }
+        #picker-map-container { width: 100%; height: 400px; border-radius: 12px; margin-bottom: 20px; border: 2px solid #eee; flex-shrink: 0; }
+        .picker-actions { display: flex; gap: 10px; justify-content: flex-end; flex-shrink: 0; }
+        .btn-cancel { background: #9ca3af; color: white; border: none; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .btn-confirm { background: var(--primary-color); color: white; border: none; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+
+        /* Leaflet Popup Customization */
         .leaflet-popup-content-wrapper { border-radius: 12px; direction: rtl; overflow: hidden; padding: 0; box-shadow: 0 5px 20px rgba(0,0,0,0.15); }
-        .leaflet-popup-content { margin: 0; width: 220px !important; line-height: 1.4; }
-        .leaflet-popup-tip { background: white; } /* Fix triangle color */
-        .popup-small-img { width: 100%; height: 100px; object-fit: cover; display: block; cursor: pointer; }
+        .leaflet-popup-content { margin: 0; width: 240px !important; line-height: 1.4; }
+        .popup-small-img { width: 100%; height: 120px; object-fit: cover; display: block; cursor: pointer; }
         .popup-small-body { padding: 12px; background: white; }
         .popup-title { font-weight: bold; font-size: 13px; color: #333; margin-bottom: 4px; }
-        .popup-price { font-size: 12px; color: var(--primary-color); font-weight: 800; }
+        .popup-price { font-size: 12px; color: var(--primary-color); font-weight: 800; margin-bottom: 4px; }
+        .popup-view-btn { font-size: 11px; color: #3b82f6; text-decoration: underline; cursor: pointer; border:none; background:none; }
 
-        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes toastSlide { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        /* Utility Classes */
         .hidden { display: none !important; }
 
-        /* Mobile Optimization */
-        @media (max-width: 768px) {
-            .logo-area { font-size: 1.3rem; }
+        /* Mobile Adjustments */
+        @media (max-width: 991px) {
+            .logo-area { font-size: 1.2rem; }
             .search-wrapper { max-width: 100%; }
-            .search-input { padding: 10px 40px 10px 12px; font-size: 0.9rem; }
-            body { padding-top: 140px; }
-            .category-tabs { padding: 10px 16px; }
+            .search-input { padding: 8px 30px 8px 10px; }
+            body { padding-top: 130px; }
             .detail-actions { flex-direction: column; }
             .btn-action { width: 100%; }
+            
             #picker-map-container { height: 300px; }
-            .fab-container { bottom: 20px; right: 20px; left: 20px; display: flex; justify-content: flex-end; }
-            .modal-box { width: 95%; height: 95vh; }
+            .fab-container { bottom: 20px; left: 20px; right: 20px; display: flex; justify-content: flex-end; }
+            
+            .view-controls.hide-in-split { display: flex; } /* کنترل‌ها در موبایل باید باشند */
         }
+
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     </style>
 </head>
 <body>
@@ -248,23 +272,28 @@
     </div>
 
     <main class="container">
-        <div class="view-controls">
+        <!-- Container for Split View on Desktop -->
+        <div class="view-controls" id="desktop-controls">
             <div class="result-count" id="result-count">در حال حاضر ۵ آگهی موجود است.</div>
             <div class="view-toggle-group">
-                <button class="view-btn first-child active" id="btn-list" onclick="switchView('list')">لیست آگهی‌ها</button>
-                <button class="view-btn" id="btn-map" onclick="switchView('map')">روی نقشه</button>
+                <button class="view-btn first-child active" id="btn-list" onclick="setDesktopMode('list')">لیست آگهی‌ها</button>
+                <button class="view-btn" id="btn-map" onclick="setDesktopMode('map')">روی نقشه</button>
             </div>
         </div>
 
-        <div id="list-view" class="listings-grid"></div>
-        <div id="map-container"></div>
+        <div class="desktop-split-view" id="main-content-area">
+            <!-- Left Side: Map -->
+            <div id="map-container" class="split-view"></div>
+            
+            <!-- Right Side: List -->
+            <div id="list-view" class="split-view listings-grid"></div>
+        </div>
     </main>
 
-    <!-- Floating Action Button -->
+    <!-- Floating Action Button (Small + Only Icon) -->
     <div class="fab-container">
-        <button class="fab-btn" onclick="openPostAdModal()">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            ثبت آگهی جدید
+        <button class="fab-btn" onclick="openPostAdModal()" title="ثبت آگهی جدید">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
         </button>
     </div>
 
@@ -311,19 +340,25 @@
                     
                     <div class="form-group">
                         <label class="form-label">عنوان آگهی</label>
-                        <input type="text" id="post-title" class="form-input" required placeholder="مثلاً فلت فورنیش شده در شیرپور...">
+                        <input type="text" id="post-title" class="form-input" required placeholder="مثلاً فلت شیک...">
                     </div>
                     
+                    <!-- عکس آگهی -->
+                    <div class="form-group">
+                        <label class="form-label">تصاویر (حداکثر ۱۰ عکس)</label>
+                        <input type="file" id="post-images" class="form-input" multiple accept="image/*" onchange="handleImagePreview(this)">
+                        <div class="image-previews" id="image-previews"></div>
+                    </div>
+
                     <div class="form-group">
                         <label class="form-label">آدرس دقیق</label>
-                        <input type="text" id="post-address" class="form-input" required placeholder="مثلاً کوچه چهارم، خانه شماره ۱۲...">
+                        <input type="text" id="post-address" class="form-input" required placeholder="مثلاً کوچه چهارم...">
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">معلومات کامل</label>
-                        <textarea id="post-desc" class="form-textarea" rows="4" placeholder="جزئیات و معلومات بیشتر را بنویسید..."></textarea>
+                        <textarea id="post-desc" class="form-textarea" rows="4" placeholder="جزئیات را بنویسید..."></textarea>
                     </div>
-                    
                     <div class="form-group">
                         <label class="form-label">موقعیت دقیق روی نقشه</label>
                         <button type="button" id="btn-loc-picker" class="btn-block btn-loc-picker" onclick="openLocationPicker()">
@@ -331,12 +366,10 @@
                         </button>
                         <input type="hidden" id="post-lat"> <input type="hidden" id="post-lng">
                     </div>
-                    
                     <div class="form-group">
                         <label class="form-label">شماره تماس</label>
-                        <input type="tel" id="post-phone" class="form-input" required placeholder="مثلاً 0799123456">
+                        <input type="tel" id="post-phone" class="form-input" required placeholder="07...">
                     </div>
-                    
                     <button type="submit" class="btn-block btn-submit">انتشار آگهی</button>
                 </form>
             </div>
@@ -351,7 +384,7 @@
                 <button class="close-btn" onclick="closeModal('location-picker-modal')">×</button>
             </div>
             <div class="modal-body">
-                <p style="margin-bottom:15px; font-size:0.95rem; color:#666; text-align:center;">روی نقشه کلیک کنید تا موقعیت دقیق ملک یا شغل مشخص شود.</p>
+                <p style="margin-bottom:15px; font-size:0.95rem; color:#555; text-align:center;">روی نقشه کلیک کنید تا موقعیت دقیق ملک یا شغل مشخص شود.</p>
                 <div id="picker-map-container"></div>
                 <div class="picker-actions">
                     <button class="btn-cancel" onclick="closeModal('location-picker-modal')">لغو</button>
@@ -364,28 +397,33 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <script>
-        // --- 1. Data (معلومات نمونه) ---
+        // --- 1. Data ---
         const listingsDB = [
-            { id: 1, type: 'realestate', subtype: 'sale', title: 'فلت فورنیش شده در شیرپور', price: '۹۵,۰۰۰ دالر', desc: '۳ خوابه، ۱۴۰ متر، پارکینگ امن، دید عالی از شهر.', loc: 'کابل، شیرپور', lat: 34.5155, lng: 69.1807, img: 'https://picsum.photos/seed/r1/600/400' },
-            { id: 2, type: 'realestate', subtype: 'sale', title: 'خانه ویلایی لوکس در گلزار هرات', price: '۴,۵۰۰,۰۰۰ افغانی', desc: '۵۰۰ متر، ویلا ویلایی با باغچه بزرگ و استخر.', loc: 'هرات، گلزار', lat: 34.3525, lng: 62.2038, img: 'https://picsum.photos/seed/r2/600/400' },
-            { id: 3, type: 'realestate', subtype: 'rent', title: 'آپارتمان کرایی در کارته سوم', price: '۱۵,۰۰۰ افغانی/ماه', desc: '۲ خوابه، نورگیر، مناسب برای خانواده، پکیج کامل.', loc: 'کابل، کارته سوم', lat: 34.5255, lng: 69.1500, img: 'https://picsum.photos/seed/r3/600/400' },
-            { id: 4, type: 'employment', subtype: null, title: 'مدیر فروش برای شرکت آریانا', price: '۳۰,۰۰۰ دالر/ماه', desc: 'نیاز به مدیر با ۵ سال سابقه کاری و تسلط به انگلیسی.', loc: 'کابل', lat: 34.5150, lng: 69.1950, img: 'https://picsum.photos/seed/e1/600/400' },
-            { id: 5, type: 'jobhunting', subtype: null, title: 'آشپز ماهر جویای کار', price: 'توافقی', desc: '۱۵ سال سابقه کار در هتل‌های لوکس بین‌المللی.', loc: 'کابل', lat: 34.5100, lng: 69.1700, img: 'https://picsum.photos/seed/j1/600/400' }
+            { id: 1, type: 'realestate', subtype: 'sale', title: 'فلت فورنیش شده شیرپور', price: '۹۵,۰۰۰ دالر', desc: '۳ خوابه، ۱۴۰ متر، پارکینگ امن.', loc: 'کابل، شیرپور', lat: 34.5155, lng: 69.1807, img: 'https://picsum.photos/seed/r1/600/400', images: [] },
+            { id: 2, type: 'realestate', subtype: 'sale', title: 'خانه ویلایی هرات', price: '۴,۰۰۰,۰۰۰ افغانی', desc: '۵۰۰ متر، ویلا ویلایی.', loc: 'هرات، گلزار', lat: 34.3525, lng: 62.2038, img: 'https://picsum.photos/seed/r2/600/400', images: [] },
+            { id: 3, type: 'realestate', subtype: 'rent', title: 'آپارتمان کرایی', price: '۱۵,۰۰۰ افغانی/ماه', desc: '۲ خوابه، نورگیر.', loc: 'کابل، کارته سوم', lat: 34.5255, lng: 69.1500, img: 'https://picsum.photos/seed/r3/600/400', images: [] },
+            { id: 4, type: 'employment', subtype: null, title: 'مدیر فروش', price: '۳۰,۰۰۰ دالر/ماه', desc: 'شرکت آریانا.', loc: 'کابل', lat: 34.5150, lng: 69.1950, img: 'https://picsum.photos/seed/e1/600/400', images: [] },
+            { id: 5, type: 'jobhunting', subtype: null, title: 'آشپز ماهر', price: 'توافقی', desc: '۱۵ سال سابقه.', loc: 'کابل', lat: 34.5100, lng: 69.1700, img: 'https://picsum.photos/seed/j1/600/400', images: [] }
         ];
 
-        // --- 2. State (حالت سیستم) ---
         let currentMainCategory = 'realestate';
         let currentSubCategory = 'sale';
-        let currentView = 'list';
+        // حالت پیش‌فرض دسکتاپ: list, map یا split
+        let desktopMode = 'list'; 
         let map = null, markersLayer = null;
         let pickerMap = null, pickerMarker = null;
         let selectedLat = null, selectedLng = null;
+        let selectedImages = []; // ذخیره عکس‌های انتخاب شده
         let lastOpenedMarkerId = null;
 
-        window.onload = function() { renderList(); };
+        window.onload = function() { 
+            checkDesktopWidth(); 
+            renderList(); 
+        };
+        
         function resetApp() { window.location.reload(); }
 
-        // --- 3. Navigation Logic (منوی اصلی) ---
+        // --- 2. Navigation ---
         function switchMainCategory(cat, btn) {
             currentMainCategory = cat;
             document.querySelectorAll('.cat-tab').forEach(el => el.classList.remove('active'));
@@ -401,7 +439,8 @@
                 subTabs.style.display = 'none';
                 currentSubCategory = null;
             }
-            switchView('list');
+            // در دسکتاپ اگر در حالت اسپلیت هستیم، با تغییر دسته‌بندی باید مارکرها آپدیت شوند
+            if(desktopMode === 'split') updateMapMarkers();
             renderList();
         }
 
@@ -409,34 +448,78 @@
             currentSubCategory = sub;
             document.querySelectorAll('.sub-cat-tab').forEach(el => el.classList.remove('active'));
             btn.classList.add('active');
+            if(desktopMode === 'split') updateMapMarkers();
             renderList();
         }
 
-        // --- 4. View Logic (لیست / نقشه) ---
-        function switchView(view) {
-            currentView = view;
+        function checkDesktopWidth() {
+            if (window.innerWidth >= 992) {
+                // دسکتاپ: حالت پیش‌فرض split نیست، مگر اینکه کاربر دکمه را بزند
+                // اما شما می‌خواهید در دسکتاپ نقشه چپ و لیست راست باشد.
+                // پس در دسکتاپ، همیشه split-view را فعال می‌کنیم؟ 
+                // بیایید منطق این را ساده کنیم: در دسکتوب همیشه اسپلیت باشد.
+                setDesktopMode('split');
+            } else {
+                // موبایل: حالت لیست پیش‌فرض
+                setDesktopMode('list');
+            }
+        }
+        
+        // چک کردن سایز پنجره هنگام تغییر اندازه
+        window.addEventListener('resize', checkDesktopWidth);
+
+        function setDesktopMode(mode) {
+            desktopMode = mode;
             const listEl = document.getElementById('list-view');
             const mapEl = document.getElementById('map-container');
+            const controls = document.getElementById('desktop-controls');
             const btnList = document.getElementById('btn-list');
             const btnMap = document.getElementById('btn-map');
+            const wrapper = document.getElementById('main-content-area');
 
-            if (view === 'list') {
-                listEl.classList.remove('hidden'); 
-                mapEl.style.display = 'none';
-                btnList.classList.add('active'); 
-                btnMap.classList.remove('active');
-            } else {
-                listEl.classList.add('hidden'); 
-                mapEl.style.display = 'block';
-                btnList.classList.remove('active'); 
-                btnMap.classList.add('active');
+            if (window.innerWidth >= 992) {
+                // Desktop Behavior: Split View always active (as requested)
+                controls.classList.add('hide-in-split'); // مخفی کردن دکمه‌های بالا
+                wrapper.classList.add('desktop-split-view');
                 
-                // تاخیر برای لود شدن صحیح نقشه
-                setTimeout(() => { if(!map) initMap(); map.invalidateSize(); updateMapMarkers(); }, 300);
+                listEl.classList.add('split-view');
+                mapEl.classList.add('split-view');
+                
+                listEl.style.display = 'flex'; // همیشه قابل مشاهده
+                mapEl.style.display = 'block'; // همیشه قابل مشاهده
+
+                if(mode === 'list') {
+                    // در حالت لیست، شاید می‌خواهید نقشه کوچکتر باشد؟ فعلاً برابر
+                    // بیایید فقط کلاس‌ها را عوض کنیم تا استایل بگیرند
+                }
+
+            } else {
+                // Mobile Behavior
+                controls.classList.remove('hide-in-split');
+                wrapper.classList.remove('desktop-split-view');
+                
+                listEl.classList.remove('split-view');
+                mapEl.classList.remove('split-view');
+
+                if (mode === 'list') {
+                    listEl.classList.remove('hidden'); 
+                    mapEl.style.display = 'none';
+                    listEl.style.display = 'grid'; // گرید برای لیست
+                    
+                    btnList.classList.add('active'); 
+                    btnMap.classList.remove('active');
+                } else {
+                    listEl.classList.add('hidden'); 
+                    mapEl.style.display = 'block';
+                    btnList.classList.remove('active'); 
+                    btnMap.classList.add('active');
+                    
+                    setTimeout(() => { if(!map) initMap(); map.invalidateSize(); updateMapMarkers(); }, 300);
+                }
             }
         }
 
-        // --- 5. Map Logic (نقشه اصلی) ---
+        // --- 3. Map Logic ---
         function initMap() {
             map = L.map('map-container').setView([34.5553, 69.2075], 6);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
@@ -457,29 +540,17 @@
                     <div style="text-align:right; direction:rtl;">
                         <img src="${item.img}" class="popup-small-img">
                         <div class="popup-small-body">
-                            <div class="popup-title">${item.title}</div>
-                            <div class="popup-price">${item.price}</div>
+                            <div style="font-weight:bold; font-size:12px; color:#333;">${item.title}</div>
+                            <div style="font-size:11px; color:#a62626; font-weight:700; margin-top:4px;">${item.price}</div>
+                            <button onclick="openAdModal(${item.id})" style="font-size:11px; color:#3b82f6; text-decoration:underline; border:none; background:none; cursor:pointer; margin-top:4px;">مشاهده</button>
                         </div>
                     </div>`;
                 marker.bindPopup(smallPopup);
-
-                // لاجیک کلیک روی پین (کلیک ۱ = کوچک، کلیک ۲ = کامل)
-                marker.on('click', function() {
-                    if (lastOpenedMarkerId === item.id) {
-                        map.closePopup();
-                        openAdModal(item);
-                        lastOpenedMarkerId = null; // ریست کردن لاجیک
-                    } else {
-                        lastOpenedMarkerId = item.id;
-                        map.openPopup();
-                    }
-                });
-
                 markersLayer.addLayer(marker);
             });
         }
 
-        // --- 6. Render List (نمایش لیست) ---
+        // --- 4. List Logic ---
         function renderList() {
             const container = document.getElementById('list-view');
             container.innerHTML = '';
@@ -488,16 +559,19 @@
                 filtered = filtered.filter(item => item.subtype === currentSubCategory);
             }
             
-            // آپدیت کردن تعداد نتیجه
+            // آپدیت تعداد نتایج
             document.getElementById('result-count').innerText = `در حال حاضر ${filtered.length} آگهی موجود است.`;
 
             if (filtered.length === 0) {
-                container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:80px 20px; color:#888;">در حال حاضر آگهی یافت نشد.</div>';
+                container.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:60px 20px; color:#888;">در حال حاضر آگهی یافت نشد.</div>';
                 return;
             }
             filtered.forEach(item => {
                 const card = document.createElement('div');
                 card.className = 'card';
+                // در دسکتوب اسپلیت، کارت‌ها ۱۰۰٪ عرض نباشند، متناسب شبکه
+                card.style.width = "100%";
+                
                 card.onclick = () => openAdModal(item);
                 card.innerHTML = `
                     <div class="card-tag">${item.type==='realestate' ? (item.subtype==='sale'?'فروشی':(item.subtype==='rent'?'کرایی':'گروی')) : (item.type==='employment'?'استخدام':'کارجویی')}</div>
@@ -511,12 +585,54 @@
             });
         }
 
-        // --- 7. Post Ad Form Logic (فرم ثبت آگهی) ---
+        // --- 5. Image Preview Logic ---
+        function handleImagePreview(input) {
+            const container = document.getElementById('image-previews');
+            container.innerHTML = '';
+            selectedImages = [];
+
+            if (input.files.length > 10) {
+                showToast('حداکثر ۱۰ عکس مجاز است.', 'error');
+                input.value = ''; // پاک کردن ورودی
+                return;
+            }
+
+            Array.from(input.files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'preview-thumb';
+                    div.innerHTML = `
+                        <img src="${e.target.result}" style="width:100%; height:100%;">
+                        <span onclick="removeImage(${index})">×</span>
+                    `;
+                    container.appendChild(div);
+                }
+                reader.readAsDataURL(file);
+                // ذخیره فایل برای ارسال (در اینجا سیموله می‌کنیم چون سرور واقعی نداریم)
+                selectedImages.push(file);
+            });
+        }
+
+        function removeImage(index) {
+            const container = document.getElementById('image-previews');
+            const thumbs = container.children;
+            if(thumbs[index]) {
+                thumbs[index].remove();
+                selectedImages.splice(index, 1);
+            }
+        }
+
+        // --- 6. Post Ad Modal ---
         function openPostAdModal() {
             document.getElementById('post-ad-form').reset();
+            // ریست کردن عکس‌ها
+            document.getElementById('image-previews').innerHTML = '';
+            selectedImages = [];
+            
             document.getElementById('post-lat').value = '';
             document.getElementById('post-lng').value = '';
-            document.getElementById('btn-loc-picker').classList.remove('selected'); // کلاس برای تغییر رنگ دکمه (اگر نیاز بود)
+            document.getElementById('btn-loc-picker').classList.remove('selected');
             document.getElementById('btn-loc-picker').innerHTML = '<span>📍 انتخاب موقعیت روی نقشه</span>';
             selectedLat = null; selectedLng = null;
 
@@ -548,8 +664,7 @@
                 if (sub === 'sale') {
                     html = `<div class="form-group"><label class="form-label">قیمت کل</label><input type="text" id="inp-price" class="form-input" required placeholder="مثلاً ۱۰۰,۰۰۰ دالر"></div>
                            <div class="form-group"><label class="form-label">فی متر مربع</label><input type="text" id="inp-price-sqm" class="form-input"></div>
-                           <div class="form-group"><label class="form-label">متراژ</label><input type="number" id="inp-area" class="form-input" required></div>
-                           <div class="form-group"><label class="form-label">تعداد اتاق</label><input type="number" id="inp-rooms" class="form-input" required></div>`;
+                           <div class="form-group"><label class="form-label">متراژ</label><input type="number" id="inp-area" class="form-input" required></div>`;
                 } else if (sub === 'rent') {
                     html = `<div class="form-group"><label class="form-label">کرایی ماهانه</label><input type="text" id="inp-price" class="form-input" required></div>
                            <div class="form-group"><label class="form-label">ودیعه (پول پیش)</label><input type="text" id="inp-deposit" class="form-input"></div>`;
@@ -557,7 +672,7 @@
                     html = `<div class="form-group"><label class="form-label">مبلغ کل گرو</label><input type="text" id="inp-price" class="form-input" required></div>`;
                 }
             } else if (cat === 'employment') {
-                html = `<div class="form-group"><label class="form-label">حقوق پیشنهادی</label><input type="text" id="inp-salary" class="form-input" required></div>
+                html = `<div class="form-group"><label class="form-label">حقوق</label><input type="text" id="inp-salary" class="form-input" required></div>
                        <div class="form-group"><label class="form-label">نوع پرداخت</label><select id="inp-salary-type" class="form-select"><option value="ماهانه">ماهانه</option><option value="ساعتی">ساعتی</option><option value="روزانه">روزانه</option></select></div>`;
             } else if (cat === 'jobhunting') {
                 html = `<div class="form-group"><label class="form-label">حقوق درخواستی</label><input type="text" id="inp-salary" class="form-input"></div>`;
@@ -565,7 +680,7 @@
             container.innerHTML = html;
         }
 
-        // --- 8. Location Picker (نقشه انتخاب مکان) ---
+        // --- 7. Location Picker Logic ---
         function openLocationPicker() {
             document.getElementById('location-picker-modal').style.display = 'flex';
             setTimeout(() => {
@@ -585,10 +700,12 @@
         }
 
         function confirmLocation() {
-            if (!selectedLat) { showToast('لطفا روی نقشه کلیک کنید تا مکان مشخص شود.', 'error'); return; }
+            if (!selectedLat) { showToast('لطفا روی نقشه کلیک کنید.', 'error'); return; }
             document.getElementById('post-lat').value = selectedLat;
             document.getElementById('post-lng').value = selectedLng;
-            document.getElementById('btn-loc-picker').innerHTML = '<span>✅ موقعیت ثبت شد</span>';
+            const btn = document.getElementById('btn-loc-picker');
+            btn.classList.add('selected');
+            btn.innerHTML = '<span>✅ موقعیت ثبت شد</span>';
             closeModal('location-picker-modal');
         }
 
@@ -605,16 +722,19 @@
             const desc = document.getElementById('post-desc').value;
             let priceText = (cat === 'realestate') ? document.getElementById('inp-price').value : document.getElementById('inp-salary').value;
 
+            // استفاده از اولین عکس آپلود شده، اگر وجود داشت
+            const coverImg = selectedImages.length > 0 ? URL.createObjectURL(selectedImages[0]) : 'https://picsum.photos/seed/' + Date.now() + '/600/400';
+
             const newAd = {
                 id: Date.now(), type: cat, subtype: sub, title: title, price: priceText || 'توافقی', 
                 desc: desc, loc: address || 'آگهی جدید', lat: parseFloat(lat), lng: parseFloat(lng), 
-                img: 'https://picsum.photos/seed/' + Date.now() + '/600/400'
+                img: coverImg, images: []
             };
 
             listingsDB.unshift(newAd);
             closeModal('post-modal');
             
-            // رفتن به دسته‌بندی جدید برای نمایش آگهی ثبت شده
+            // سوئیچ به دسته‌بندی صحیح
             if (currentMainCategory !== cat || currentSubCategory !== sub) {
                 if(cat === 'realestate') {
                     const mainTabs = document.querySelectorAll('.cat-tab'); if(mainTabs[0]) switchMainCategory('realestate', mainTabs[0]);
@@ -624,11 +744,21 @@
                 }
             }
             
+            // آپدیت نقشه در حالت اسپلیت دسکتاپ
+            if(window.innerWidth >= 992) {
+                updateMapMarkers();
+            }
+            
             renderList();
-            showToast('آگهی شما با موفقیت ثبت شد!', 'success');
+            showToast('✅ آگهی شما با موفقیت ثبت شد!', 'success');
         }
 
-        // --- 9. Ad Detail Logic (مودال جزئیات) ---
+        // --- 8. Ad Detail Logic ---
+        function openAdModalById(id) {
+            const item = listingsDB.find(i => i.id === id);
+            if(item) openAdModal(item);
+        }
+
         function openAdModal(item) {
             const modal = document.getElementById('ad-modal');
             const body = document.getElementById('ad-modal-body');
@@ -643,10 +773,10 @@
                 </div>
                 
                 <h4 style="margin-bottom:10px; color:#333;">معلومات:</h4>
-                <p style="line-height:1.7; color:#555; margin-bottom:20px;">${item.desc}</p>
+                <p style="line-height:1.7; color:#444; margin-bottom:20px;">${item.desc}</p>
 
                 <div class="detail-actions">
-                    <button class="btn-action btn-contact" onclick="copyContact('07XXXXXXXX')">📞 کپی شماره تماس</button>
+                    <button class="btn-action btn-contact" onclick="alert('شماره تماس: 07XXXXXXXX')">📞 تماس گرفتن</button>
                     <button class="btn-action btn-map-loc" onclick="focusOnMap(${item.lat}, ${item.lng})">📍 رفتن به نقشه</button>
                 </div>
             `;
@@ -655,7 +785,9 @@
 
         function focusOnMap(lat, lng) {
             closeModal('ad-modal');
-            switchView('map');
+            // در موبایل سوییچ ویو لازم است، در دسکتاپ اسپلیت نقشه جلو است
+            if(window.innerWidth < 992) setDesktopMode('map');
+            
             setTimeout(() => {
                 if(!map) initMap();
                 map.flyTo([lat, lng], 16, { duration: 1.5 });
@@ -666,30 +798,17 @@
             }, 350);
         }
 
-        // --- 10. Utilities (ابزارها) ---
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         window.onclick = function(e) { if (e.target.classList.contains('modal-overlay')) { e.target.style.display = 'none'; } }
 
-        // سیستم نمایش پیام (Toast)
+        // --- 9. Toast Notification ---
         function showToast(message, type = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             toast.innerHTML = type === 'success' ? '✅ ' + message : '⚠️ ' + message;
-            
             container.appendChild(toast);
-            
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(20px)';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        function copyContact(number) {
-            navigator.clipboard.writeText(number).then(() => {
-                showToast('شماره تماس کپی شد: ' + number, 'success');
-            });
+            setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(20px)'; setTimeout(() => toast.remove(), 300); }, 3000);
         }
     </script>
 </body>
